@@ -1,10 +1,11 @@
 # Copyright 2017 LasLabs Inc.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# Copyright 2018 Brainbean Apps (https://brainbeanapps.com)
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 {
     'name': 'Module Auto Update',
     'summary': 'Automatically update Odoo modules',
-    'version': '11.0.2.0.4',
+    'version': '12.0.2.0.5',
     'category': 'Extra Tools',
     'website': 'https://github.com/OCA/server-tools',
     'author': 'LasLabs, '
@@ -13,15 +14,13 @@
               'ACSONE SA/NV, '
               'Odoo Community Association (OCA)',
     'license': 'LGPL-3',
-    'application': False,
     'installable': True,
     'uninstall_hook': 'uninstall_hook',
     'depends': [
         'base',
     ],
     'data': [
-        'data/cron_data_deprecated.xml',
+        'views/ir_module_module.xml',
     ],
     'development_status': 'Production/Stable',
-    'maintainers': ['sbidoul'],
 }

@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-# © 2014-2016 Therp BV <http://therp.nl>
+# Copyright 2014-2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# pylint: disable=consider-merging-classes-inherited
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError
-from odoo.addons.base.ir.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class IrModel(models.Model):

@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
-# © 2014-2016 Therp BV <http://therp.nl>
+# Copyright 2014-2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# pylint: disable=consider-merging-classes-inherited
+
 import logging
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessDenied
@@ -10,6 +11,7 @@ class CleanupPurgeLine(models.AbstractModel):
     """ Abstract base class for the purge wizard lines """
     _name = 'cleanup.purge.line'
     _order = 'name'
+    _description = 'Purge Column Abstract Wizard'
 
     name = fields.Char('Name', readonly=True)
     purged = fields.Boolean('Purged', readonly=True)

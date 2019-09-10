@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-# © 2014-2016 Therp BV <http://therp.nl>
+# Copyright 2014-2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# pylint: disable=consider-merging-classes-inherited
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from ..identifier_adapter import IdentifierAdapter
@@ -9,6 +9,7 @@ from ..identifier_adapter import IdentifierAdapter
 class CleanupPurgeLineColumn(models.TransientModel):
     _inherit = 'cleanup.purge.line'
     _name = 'cleanup.purge.line.column'
+    _description = 'Purge Column Wizard Lines'
 
     model_id = fields.Many2one('ir.model', 'Model', required=True,
                                ondelete='CASCADE')
@@ -66,6 +67,7 @@ class CleanupPurgeWizardColumn(models.TransientModel):
     # Format: {table: [fields]}
     blacklist = {
         'wkf_instance': ['uid'],  # lp:1277899
+        'res_users': ['password', 'password_crypt'],
     }
 
     @api.model

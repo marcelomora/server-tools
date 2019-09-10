@@ -1,6 +1,6 @@
-[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/149/11.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-server-tools-149)
-[![Build Status](https://travis-ci.org/OCA/server-tools.svg?branch=11.0)](https://travis-ci.org/OCA/server-tools)
-[![Coverage Status](https://coveralls.io/repos/OCA/server-tools/badge.png?branch=11.0)](https://coveralls.io/r/OCA/server-tools?branch=11.0)
+[![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/149/12.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-server-tools-149)
+[![Build Status](https://travis-ci.org/OCA/server-tools.svg?branch=12.0)](https://travis-ci.org/OCA/server-tools)
+[![Coverage Status](https://coveralls.io/repos/OCA/server-tools/badge.png?branch=12.0)](https://coveralls.io/r/OCA/server-tools?branch=12.0)
 [![Code Climate](https://codeclimate.com/github/OCA/server-tools/badges/gpa.svg)](https://codeclimate.com/github/OCA/server-tools)
 
 Server Environment And Tools
@@ -18,4 +18,4 @@ Do you want to contribute? Please read our [contributing guidelines](https://git
 
 Translation Status
 ------------------
-[![Transifex Status](https://www.transifex.com/projects/p/OCA-server-tools-11-0/chart/image_png)](https://www.transifex.com/projects/p/OCA-server-tools-11-0)
+[![Translation status](https://translation.odoo-community.org/widgets/server-tools-12-0/-/multi-auto.svg)](https://translation.odoo-community.org/engage/server-tools-12-0/?utm_source=widget)

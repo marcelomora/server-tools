@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# © 2016 Therp BV <http://therp.nl>
+# Copyright 2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from psycopg2 import ProgrammingError
 from odoo.modules.registry import Registry
@@ -17,7 +16,7 @@ class TestDatabaseCleanup(TransactionCase):
         self.model = None
         # Create one property for tests
         self.env['ir.property'].create({
-            'fields_id': self.env.ref('base.field_res_partner_name').id,
+            'fields_id': self.env.ref('base.field_res_partner__name').id,
             'type': 'char',
             'value_text': 'My default partner name',
         })

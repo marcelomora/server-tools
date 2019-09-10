@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-# © 2014-2016 Therp BV <http://therp.nl>
+# Copyright 2014-2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# pylint: disable=consider-merging-classes-inherited
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path
-from odoo.addons.base.ir.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class IrModelData(models.Model):
@@ -63,8 +63,14 @@ class CleanupPurgeWizardModule(models.TransientModel):
     @api.model
     def find(self):
         res = []
-        for module in self.env['ir.module.module'].search([]):
-            if get_module_path(module.name):
+        IrModule = self.env['ir.module.module']
+        for module in IrModule.search(
+                [
+                    ('to_buy', '=', False),
+                    ('name', '!=', 'studio_customization')
+                ]
+        ):
+            if get_module_path(module.name, display_warning=False):
                 continue
             if module.state == 'uninstalled':
                 self.env['cleanup.purge.line.module'].create({

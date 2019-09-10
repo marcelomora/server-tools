@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-# © 2014-2016 Therp BV <http://therp.nl>
+# Copyright 2014-2016 Therp BV <http://therp.nl>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# pylint: disable=consider-merging-classes-inherited
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from ..identifier_adapter import IdentifierAdapter
@@ -9,6 +9,7 @@ from ..identifier_adapter import IdentifierAdapter
 class CleanupPurgeLineTable(models.TransientModel):
     _inherit = 'cleanup.purge.line'
     _name = 'cleanup.purge.line.table'
+    _description = 'Purge tables wizard lines'
 
     wizard_id = fields.Many2one(
         'cleanup.purge.wizard.table', 'Purge Wizard', readonly=True)
@@ -92,6 +93,7 @@ class CleanupPurgeWizardTable(models.TransientModel):
                 for column in model_pool._fields.values()
                 if column.type == 'many2many' and
                 (column.compute is None or column.store)
+                and column.relation
             ]
 
         self.env.cr.execute(

@@ -1,6 +1,6 @@
-# © 2004-2009 Tiny SPRL (<http://tiny.be>).
-# © 2015 Agile Business Group <http://www.agilebg.com>
-# © 2016 Grupo ESOC Ingeniería de Servicios, S.L.U. - Jairo Llopis
+# Copyright 2004-2009 Tiny SPRL (<http://tiny.be>).
+# Copyright 2015 Agile Business Group <http://www.agilebg.com>
+# Copyright 2016 Grupo ESOC Ingenieria de Servicios, S.L.U. - Jairo Llopis
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import logging
@@ -83,6 +83,15 @@ class DbBackup(models.Model):
              "read permissions for that file.",
     )
 
+    backup_format = fields.Selection(
+        [
+            ("zip", "zip (includes filestore)"),
+            ("dump", "pg_dump custom format (without filestore)")
+        ],
+        default='zip',
+        help="Choose the format for this backup."
+    )
+
     @api.model
     def _default_folder(self):
         """Default to ``backups`` folder inside current server datadir."""
@@ -131,11 +140,11 @@ class DbBackup(models.Model):
     def action_backup(self):
         """Run selected backups."""
         backup = None
-        filename = self.filename(datetime.now())
         successful = self.browse()
 
         # Start with local storage
         for rec in self.filtered(lambda r: r.method == "local"):
+            filename = self.filename(datetime.now(), ext=rec.backup_format)
             with rec.backup_log():
                 # Directory must exist
                 try:
@@ -151,21 +160,28 @@ class DbBackup(models.Model):
                             shutil.copyfileobj(cached, destiny)
                     # Generate new backup
                     else:
-                        db.dump_db(self.env.cr.dbname, destiny)
+                        db.dump_db(
+                            self.env.cr.dbname,
+                            destiny,
+                            backup_format=rec.backup_format
+                        )
                         backup = backup or destiny.name
                 successful |= rec
 
         # Ensure a local backup exists if we are going to write it remotely
         sftp = self.filtered(lambda r: r.method == "sftp")
         if sftp:
-            if backup:
-                cached = open(backup)
-            else:
-                cached = db.dump_db(self.env.cr.dbname, None)
+            for rec in sftp:
+                filename = self.filename(datetime.now(), ext=rec.backup_format)
+                with rec.backup_log():
 
-            with cached:
-                for rec in sftp:
-                    with rec.backup_log():
+                    cached = db.dump_db(
+                        self.env.cr.dbname,
+                        None,
+                        backup_format=rec.backup_format
+                    )
+
+                    with cached:
                         with rec.sftp_connection() as remote:
                             # Directory must exist
                             try:
@@ -199,7 +215,7 @@ class DbBackup(models.Model):
             _logger.exception("Database backup failed: %s", self.name)
             escaped_tb = tools.html_escape(traceback.format_exc())
             self.message_post(  # pylint: disable=translation-required
-                "<p>%s</p><pre>%s</pre>" % (
+                body="<p>%s</p><pre>%s</pre>" % (
                     _("Database backup failed."),
                     escaped_tb),
                 subtype=self.env.ref(
@@ -208,7 +224,7 @@ class DbBackup(models.Model):
             )
         else:
             _logger.info("Database backup succeeded: %s", self.name)
-            self.message_post(_("Database backup succeeded."))
+            self.message_post(body=_("Database backup succeeded."))
 
     @api.multi
     def cleanup(self):
@@ -245,7 +261,7 @@ class DbBackup(models.Model):
             _logger.exception("Cleanup of old database backups failed: %s")
             escaped_tb = tools.html_escape(traceback.format_exc())
             self.message_post(  # pylint: disable=translation-required
-                "<p>%s</p><pre>%s</pre>" % (
+                body="<p>%s</p><pre>%s</pre>" % (
                     _("Cleanup of old database backups failed."),
                     escaped_tb),
                 subtype=self.env.ref("auto_backup.failure"))
@@ -255,13 +271,16 @@ class DbBackup(models.Model):
                 self.name)
 
     @staticmethod
-    def filename(when):
+    def filename(when, ext='zip'):
         """Generate a file name for a backup.
 
         :param datetime.datetime when:
             Use this datetime instead of :meth:`datetime.datetime.now`.
+        :param str ext: Extension of the file. Default: dump.zip
         """
-        return "{:%Y_%m_%d_%H_%M_%S}.dump.zip".format(when)
+        return "{:%Y_%m_%d_%H_%M_%S}.{ext}".format(
+            when, ext='dump.zip' if ext == 'zip' else ext
+        )
 
     @api.multi
     def sftp_connection(self):

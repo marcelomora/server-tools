@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
 # Copyright 2017 LasLabs Inc.
 # Copyright 2018 ACSONE SA/NV.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 
 import os
 import tempfile
 
 import mock
 
+import odoo
 from odoo.modules import get_module_path
-from odoo.tests import common
-from odoo.tests.common import TransactionCase
+from odoo.tests import TransactionCase
 
 from ..addon_hash import addon_hash
 from ..models.module import IncompleteUpgradeError, DEFAULT_EXCLUDE_PATTERNS
@@ -80,8 +79,7 @@ class TestModule(TransactionCase):
         self.assertFalse(Imm._get_modules_with_changed_checksum())
 
 
-@common.at_install(False)
-@common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestModuleAfterInstall(TransactionCase):
 
     def setUp(self):

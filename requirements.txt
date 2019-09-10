@@ -1,5 +1,6 @@
-checksumdir
 raven
+openpyxl
+xlrd
+xlwt
 pysftp
-acme_tiny
-IPy
+pygount
